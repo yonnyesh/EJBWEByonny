@@ -11,7 +11,6 @@ public interface PersonaServiceRemote {
 	
 	public List<Persona> listarPersona();
 	
-	public Persona registrarPersona(Persona persona);
 	
 	public void guardarPersona(Persona persona);
 

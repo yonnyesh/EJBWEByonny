@@ -15,26 +15,35 @@ import org.certificatic.dao.PersonaDAOImpl;
 import org.certificatic.entity.Persona;
 import org.certificatic.service.PersonaServiceLocal;
 
+
 @WebServlet("/personas")
 public class PersonaController extends HttpServlet{
 	
 	@Inject
 	PersonaServiceLocal personaServiceLocal;
 	
-	@EJB
-	PersonaDAOImpl personaDAOImpl;
 	
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		List<Persona> personas = personaDAOImpl.listarPersona();
-		Persona nuevaPersona = personaDAOImpl.guardarPersona(persona);
-		nuevaPersona.setIdPersona(personas.size() +1);
+		List<Persona> personas = personaServiceLocal.listarPersona();
+		
+		
+		Persona nuevaPersona = new Persona();
+		nuevaPersona .setIdPersona(personas.size() +1);
 		nuevaPersona.setNombre(req.getParameter("nombre"));
 		nuevaPersona.setApellidos(req.getParameter("apellidos"));
-		nuevaPersona.setEmail(req.getParameter("emial"));
-		personas.add(nuevaPersona);
+		nuevaPersona.setEmail(req.getParameter("email"));
 		
+		System.out.println("Guardando persona::::: " + nuevaPersona);
+		personaServiceLocal.guardarPersona(nuevaPersona);
+		System.out.println("guardado de forma exitosa");
+
+		 List<Persona> personaslist = personaServiceLocal.listarPersona();
+
+				 req.setAttribute("personas", personaslist);
+		  
+		  req.getRequestDispatcher("/index.jsp").forward(req, resp);
 	}
 
 	@Override
